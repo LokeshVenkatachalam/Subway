@@ -21,6 +21,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <sstream> 
+#include <limits>
 
 using namespace std;
 
@@ -28,7 +29,10 @@ const unsigned int DIST_INFINITY = std::numeric_limits<unsigned int>::max() - 1;
 
 typedef unsigned int uint;
 typedef unsigned long long ull;
+typedef unsigned long long edge_t;  // NEW: for edge counts and indices
 
+// Optionally, if you wish to change DIST_INFINITY for edge pointers:
+// const edge_t EDGE_INFINITY = std::numeric_limits<edge_t>::max() - 1;
 
 struct OutEdge{
     uint end;

@@ -58,8 +58,8 @@ int main(int argc, char** argv)
 		infile.close();
 		
 		uint num_nodes = max + 1;
-		uint num_edges = edgeCounter;
-		uint *nodePointer = new uint[num_nodes+1];
+		edge_t num_edges = edgeCounter;
+		edge_t *nodePointer = new edge_t[num_nodes+1];
 		OutEdge *edgeList = new OutEdge[num_edges];
 		uint *degree = new uint[num_nodes];
 		for(uint i=0; i<num_nodes; i++)
@@ -88,8 +88,8 @@ int main(int argc, char** argv)
 		std::ofstream outfile(input.substr(0, input.length()-2)+"bcsr", std::ofstream::binary);
 		
 		outfile.write((char*)&num_nodes, sizeof(unsigned int));
-		outfile.write((char*)&num_edges, sizeof(unsigned int));
-		outfile.write ((char*)nodePointer, sizeof(unsigned int)*num_nodes);
+		outfile.write((char*)&num_edges, sizeof(edge_t));
+		outfile.write ((char*)nodePointer, sizeof(edge_t)*num_nodes);
 		outfile.write ((char*)edgeList, sizeof(OutEdge)*num_edges);
 		
 		outfile.close();
@@ -126,8 +126,8 @@ int main(int argc, char** argv)
 		infile.close();
 		
 		uint num_nodes = max + 1;
-		uint num_edges = edgeCounter;
-		uint *nodePointer = new uint[num_nodes+1];
+		edge_t num_edges = edgeCounter;
+		edge_t *nodePointer = new edge_t[num_nodes+1];
 		OutEdgeWeighted *edgeList = new OutEdgeWeighted[num_edges];
 		uint *degree = new uint[num_nodes];
 		for(uint i=0; i<num_nodes; i++)
@@ -157,8 +157,8 @@ int main(int argc, char** argv)
 		std::ofstream outfile(input.substr(0, input.length()-3)+"bwcsr", std::ofstream::binary);
 		
 		outfile.write((char*)&num_nodes, sizeof(unsigned int));
-		outfile.write((char*)&num_edges, sizeof(unsigned int));
-		outfile.write ((char*)nodePointer, sizeof(unsigned int)*num_nodes);
+		outfile.write((char*)&num_edges, sizeof(edge_t));
+		outfile.write ((char*)nodePointer, sizeof(edge_t)*num_nodes);
 		outfile.write ((char*)edgeList, sizeof(OutEdgeWeighted)*num_edges);
 		
 		outfile.close();

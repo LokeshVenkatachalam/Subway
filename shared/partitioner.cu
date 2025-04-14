@@ -1,4 +1,3 @@
-
 #include "partitioner.cuh"
 #include "gpu_error_check.cuh"
 
@@ -17,7 +16,7 @@ void Partitioner<E>::partition(Subgraph<E> &subgraph, uint numActiveNodes)
 	unsigned int left, right, mid;
 	unsigned int partitionSize;
 	unsigned int numNodesInPartition;
-	unsigned int numPartitionedEdges;
+	edge_t numPartitionedEdges; // CHANGED type
 	bool foundTo;
 	unsigned int accurCount;
 	
@@ -78,7 +77,7 @@ void Partitioner<E>::partition(Subgraph<E> &subgraph, uint numActiveNodes)
 		//cout << "#nodes in P: " << numNodesInPartition << "    #edges in P: " << partitionSize << endl;
 		
 		fromNode.push_back(from);
-		fromEdge.push_back(numPartitionedEdges);
+		fromEdge.push_back(numPartitionedEdges); // Ensure fromEdge is now vector<edge_t>
 		partitionNodeSize.push_back(numNodesInPartition);
 		partitionEdgeSize.push_back(partitionSize);
 		
@@ -94,9 +93,9 @@ template <class E>
 void Partitioner<E>::reset()
 {
 	fromNode.clear();
-	fromEdge.clear();
+	fromEdge.clear();          // Make sure fromEdge is vector<edge_t>
 	partitionNodeSize.clear();
-	partitionEdgeSize.clear();
+	partitionEdgeSize.clear(); // Likewise update type
 	numPartitions = 0;
 }
 

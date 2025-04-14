@@ -1,4 +1,3 @@
-
 #include "subgraph.cuh"
 #include "gpu_error_check.cuh"
 #include "graph.cuh"
@@ -6,7 +5,7 @@
 
 
 template <class E>
-Subgraph<E>::Subgraph(uint num_nodes, uint num_edges)
+Subgraph<E>::Subgraph(uint num_nodes, edge_t num_edges)
 {
 	cudaProfilerStart();
 	cudaError_t error;

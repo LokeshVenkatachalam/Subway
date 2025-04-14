@@ -41,12 +41,12 @@ void Graph<E>::ReadGraph()
 		ifstream infile (graphFilePath, ios::in | ios::binary);
 	
 		infile.read ((char*)&num_nodes, sizeof(uint));
-		infile.read ((char*)&num_edges, sizeof(uint));
+		infile.read ((char*)&num_edges, sizeof(edge_t));
 		
-		nodePointer = new uint[num_nodes+1];
+		nodePointer = new edge_t[num_nodes+1];
 		gpuErrorcheck(cudaMallocHost(&edgeList, (num_edges) * sizeof(E)));
 		
-		infile.read ((char*)nodePointer, sizeof(uint)*num_nodes);
+		infile.read ((char*)nodePointer, sizeof(edge_t)*num_nodes);
 		infile.read ((char*)edgeList, sizeof(E)*num_edges);
 		nodePointer[num_nodes] = num_edges;
 	}
@@ -83,7 +83,7 @@ void Graph<E>::ReadGraph()
 			infile.close();
 			num_nodes = max + 1;
 			num_edges = edgeCounter;
-			nodePointer = new uint[num_nodes+1];
+			nodePointer = new edge_t[num_nodes+1];
 			gpuErrorcheck(cudaMallocHost(&edgeList, (num_edges) * sizeof(E)));
 			uint *degree = new uint[num_nodes];
 			for(uint i=0; i<num_nodes; i++)
@@ -138,7 +138,7 @@ void Graph<E>::ReadGraph()
 			infile.close();
 			num_nodes = max + 1;
 			num_edges = edgeCounter;
-			nodePointer = new uint[num_nodes+1];
+			nodePointer = new edge_t[num_nodes+1];
 			gpuErrorcheck(cudaMallocHost(&edgeList, (num_edges) * sizeof(E)));
 			uint *degree = new uint[num_nodes];
 			for(uint i=0; i<num_nodes; i++)
@@ -168,6 +168,41 @@ void Graph<E>::ReadGraph()
 			delete[] outDegreeCounter;						
 		}
 	}
+	else if(graphFormat == "egr")
+    {
+        ifstream inFile(graphFilePath, ios::in | ios::binary);
+        long long size;
+        vector<long long> vertices;
+        vector<int> edgesVec;
+        
+        // Read number of vertices (size)
+        inFile.read(reinterpret_cast<char*>(&size), sizeof(size));
+        vertices.resize(size+1);
+        // Read number of edges (size)
+        inFile.read(reinterpret_cast<char*>(&size), sizeof(size));
+        edgesVec.resize(size);
+        
+        // Read vertex pointer array and edge list
+        inFile.read(reinterpret_cast<char*>(vertices.data()), vertices.size() * sizeof(long long));
+        inFile.read(reinterpret_cast<char*>(edgesVec.data()), edgesVec.size() * sizeof(int));
+        inFile.close();
+        
+        num_nodes = vertices.size() - 1;
+        num_edges = edgesVec.size();
+        cout << "Num vertices = " << num_nodes << endl;
+        cout << "Num Edges = " << num_edges << endl;
+        
+        nodePointer = new edge_t[num_nodes+1];
+        for(uint i = 0; i < vertices.size(); i++){
+            nodePointer[i] = vertices[i];
+        }
+        
+        gpuErrorcheck(cudaMallocHost(&edgeList, num_edges * sizeof(E)));
+        for(edge_t i = 0; i < num_edges; i++){
+            edgeList[i].end = edgesVec[i];
+            // If using weighted edges and E is OutEdgeWeighted, set a default weight here.
+        }
+    }
 	else
 	{
 		cout << "The graph format is not supported!\n";
@@ -238,12 +273,12 @@ void GraphPR<E>::ReadGraph()
 		ifstream infile (graphFilePath, ios::in | ios::binary);
 	
 		infile.read ((char*)&num_nodes, sizeof(uint));
-		infile.read ((char*)&num_edges, sizeof(uint));
+		infile.read ((char*)&num_edges, sizeof(edge_t));
 		
-		nodePointer = new uint[num_nodes+1];
+		nodePointer = new edge_t[num_nodes+1];
 		gpuErrorcheck(cudaMallocHost(&edgeList, (num_edges) * sizeof(E)));
 		
-		infile.read ((char*)nodePointer, sizeof(uint)*num_nodes);
+		infile.read ((char*)nodePointer, sizeof(edge_t)*num_nodes);
 		infile.read ((char*)edgeList, sizeof(E)*num_edges);
 		nodePointer[num_nodes] = num_edges;
 	}
@@ -280,7 +315,7 @@ void GraphPR<E>::ReadGraph()
 			infile.close();
 			num_nodes = max + 1;
 			num_edges = edgeCounter;
-			nodePointer = new uint[num_nodes+1];
+			nodePointer = new edge_t[num_nodes+1];
 			gpuErrorcheck(cudaMallocHost(&edgeList, (num_edges) * sizeof(E)));
 			uint *degree = new uint[num_nodes];
 			for(uint i=0; i<num_nodes; i++)
@@ -335,7 +370,7 @@ void GraphPR<E>::ReadGraph()
 			infile.close();
 			num_nodes = max + 1;
 			num_edges = edgeCounter;
-			nodePointer = new uint[num_nodes+1];
+			nodePointer = new edge_t[num_nodes+1];
 			gpuErrorcheck(cudaMallocHost(&edgeList, (num_edges) * sizeof(E)));
 			uint *degree = new uint[num_nodes];
 			for(uint i=0; i<num_nodes; i++)
@@ -365,6 +400,41 @@ void GraphPR<E>::ReadGraph()
 			delete[] outDegreeCounter;						
 		}
 	}
+	else if(graphFormat == "egr")
+    {
+        ifstream inFile(graphFilePath, ios::in | ios::binary);
+        long long size;
+        vector<long long> vertices;
+        vector<int> edgesVec;
+        
+        // Read number of vertices (size)
+        inFile.read(reinterpret_cast<char*>(&size), sizeof(size));
+        vertices.resize(size+1);
+        // Read number of edges (size)
+        inFile.read(reinterpret_cast<char*>(&size), sizeof(size));
+        edgesVec.resize(size);
+        
+        // Read vertex pointer array and edge list
+        inFile.read(reinterpret_cast<char*>(vertices.data()), vertices.size() * sizeof(long long));
+        inFile.read(reinterpret_cast<char*>(edgesVec.data()), edgesVec.size() * sizeof(int));
+        inFile.close();
+        
+        num_nodes = vertices.size() - 1;
+        num_edges = edgesVec.size();
+        cout << "Num vertices = " << num_nodes << endl;
+        cout << "Num Edges = " << num_edges << endl;
+        
+        nodePointer = new edge_t[num_nodes+1];
+        for(uint i = 0; i < vertices.size(); i++){
+            nodePointer[i] = vertices[i];
+        }
+        
+        gpuErrorcheck(cudaMallocHost(&edgeList, num_edges * sizeof(E)));
+        for(edge_t i = 0; i < num_edges; i++){
+            edgeList[i].end = edgesVec[i];
+            // If using weighted edges and E is OutEdgeWeighted, set a default weight here.
+        }
+    }
 	else
 	{
 		cout << "The graph format is not supported!\n";

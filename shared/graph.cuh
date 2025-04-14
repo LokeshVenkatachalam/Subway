@@ -14,8 +14,8 @@ public:
 	bool isWeighted;
 	bool isLarge;
 	uint num_nodes;
-	uint num_edges;
-	uint *nodePointer;
+	edge_t num_edges;        // CHANGED: use edge_t instead of uint
+	edge_t *nodePointer;     // CHANGED: pointer type is now edge_t
 	E *edgeList;
 	uint *outDegree;
 	bool *label1;
@@ -42,8 +42,8 @@ public:
 	bool isWeighted;
 	bool isLarge;
 	uint num_nodes;
-	uint num_edges;
-	uint *nodePointer;
+	edge_t num_edges;        // CHANGED: use edge_t instead of uint
+	edge_t *nodePointer;     // CHANGED: pointer type is now edge_t
 	E *edgeList;
 	uint *outDegree;
 	float *value;
