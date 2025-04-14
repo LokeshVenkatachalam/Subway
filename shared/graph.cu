@@ -32,7 +32,7 @@ template <class E>
 void Graph<E>::ReadGraph()
 {
 
-	cout << "Reading the input graph from the following file:\n>> " << graphFilePath << endl;
+	// cout << "Reading the input graph from the following file:\n>> " << graphFilePath << endl;
 	
 	this->graphFormat = GetFileExtension(graphFilePath);
 	
@@ -265,7 +265,7 @@ template <class E>
 void GraphPR<E>::ReadGraph()
 {
 
-	cout << "Reading the input graph from the following file:\n>> " << graphFilePath << endl;
+	// cout << "Reading the input graph from the following file:\n>> " << graphFilePath << endl;
 	
 	this->graphFormat = GetFileExtension(graphFilePath);
 	
