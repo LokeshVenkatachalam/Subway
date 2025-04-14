@@ -60,19 +60,19 @@ __global__ void makeActiveNodesPointer(unsigned int *activeNodesPointer, unsigne
 }
 
 // pthread
-template <class E>
+template <class E, class NP> // added NP template parameter
 void dynamic(unsigned int tId,
 				unsigned int numThreads,	
 				unsigned int numActiveNodes,
 				unsigned int *activeNodes,
 				unsigned int *outDegree, 
 				unsigned int *activeNodesPointer,
-				unsigned int *nodePointer, 
+				NP *nodePointer, // changed from unsigned int* to NP*
 				E *activeEdgeList,
 				E *edgeList)
 {
-
-	unsigned int chunkSize = ceil(numActiveNodes / numThreads);
+	// Use integer arithmetic for chunk size (or cast after ceil)
+	unsigned int chunkSize = (numActiveNodes + numThreads - 1) / numThreads;
 	unsigned int left, right;
 	left = tId * chunkSize;
 	right = min(left+chunkSize, numActiveNodes);	
@@ -82,13 +82,14 @@ void dynamic(unsigned int tId,
 	unsigned int fromHere;
 	unsigned int fromThere;
 
-	for(unsigned int i=left; i<right; i++)
+	for(unsigned int i = left; i < right; i++)
 	{
 		thisNode = activeNodes[i];
 		thisDegree = outDegree[thisNode];
 		fromHere = activeNodesPointer[i];
-		fromThere = nodePointer[thisNode];
-		for(unsigned int j=0; j<thisDegree; j++)
+		// Cast nodePointer[thisNode] to unsigned int
+		fromThere = static_cast<unsigned int>(nodePointer[thisNode]);
+		for(unsigned int j = 0; j < thisDegree; j++)
 		{
 			activeEdgeList[fromHere+j] = edgeList[fromThere+j];
 		}
@@ -180,7 +181,7 @@ void SubgraphGenerator<E>::generate(Graph<E> &graph, Subgraph<E> &subgraph)
 	
 	for(unsigned int t = 0; t < numThreads; t++){
 		runThreads.emplace_back([=, &subgraph, &graph]() {
-			dynamic<E>(t, numThreads, subgraph.numActiveNodes,
+			dynamic<E, unsigned int>(t, numThreads, subgraph.numActiveNodes,
 					   subgraph.activeNodes,
 					   graph.outDegree, 
 					   subgraph.activeNodesPointer,
@@ -257,7 +258,7 @@ void SubgraphGenerator<E>::generate(GraphPR<E> &graph, Subgraph<E> &subgraph, fl
 	
 	for(unsigned int t = 0; t < numThreads; t++){
 		runThreads.emplace_back([=, &subgraph, &graph]() {
-			dynamic<E>(t, numThreads, subgraph.numActiveNodes,
+			dynamic<E, unsigned int>(t, numThreads, subgraph.numActiveNodes,
 					   subgraph.activeNodes,
 					   graph.outDegree, 
 					   subgraph.activeNodesPointer,
