@@ -175,26 +175,22 @@ void SubgraphGenerator<E>::generate(Graph<E> &graph, Subgraph<E> &subgraph)
 	if(subgraph.numActiveNodes < THRESHOLD_THREAD)
 		numThreads = 1;
 
-	thread runThreads[numThreads];
+	std::vector<std::thread> runThreads;
+	runThreads.reserve(numThreads);
 	
-	for(unsigned int t=0; t<numThreads; t++)
-	{
-
-		runThreads[t] = thread(dynamic<E>,
-								t,
-								numThreads,
-								subgraph.numActiveNodes,
-								subgraph.activeNodes,
-								graph.outDegree, 
-								subgraph.activeNodesPointer,
-								graph.nodePointer, 
-								subgraph.activeEdgeList,
-								graph.edgeList);
-
+	for(unsigned int t = 0; t < numThreads; t++){
+		runThreads.emplace_back([=, &subgraph, &graph]() {
+			dynamic<E>(t, numThreads, subgraph.numActiveNodes,
+					   subgraph.activeNodes,
+					   graph.outDegree, 
+					   subgraph.activeNodesPointer,
+					   graph.nodePointer, 
+					   subgraph.activeEdgeList,
+					   graph.edgeList);
+		});
 	}
-		
-	for(unsigned int t=0; t<numThreads; t++)
-		runThreads[t].join();
+	for(auto &th : runThreads)
+		th.join();
 	
 	//finishDynC = std::chrono::system_clock::now();
 	//std::chrono::duration<double> elapsed_seconds_dync = finishDynC-startDynC;
@@ -256,26 +252,22 @@ void SubgraphGenerator<E>::generate(GraphPR<E> &graph, Subgraph<E> &subgraph, fl
 	if(subgraph.numActiveNodes < THRESHOLD_THREAD)
 		numThreads = 1;
 
-	thread runThreads[numThreads];
+	std::vector<std::thread> runThreads;
+	runThreads.reserve(numThreads);
 	
-	for(unsigned int t=0; t<numThreads; t++)
-	{
-
-		runThreads[t] = thread(dynamic<E>,
-								t,
-								numThreads,
-								subgraph.numActiveNodes,
-								subgraph.activeNodes,
-								graph.outDegree, 
-								subgraph.activeNodesPointer,
-								graph.nodePointer, 
-								subgraph.activeEdgeList,
-								graph.edgeList);
-
+	for(unsigned int t = 0; t < numThreads; t++){
+		runThreads.emplace_back([=, &subgraph, &graph]() {
+			dynamic<E>(t, numThreads, subgraph.numActiveNodes,
+					   subgraph.activeNodes,
+					   graph.outDegree, 
+					   subgraph.activeNodesPointer,
+					   graph.nodePointer, 
+					   subgraph.activeEdgeList,
+					   graph.edgeList);
+		});
 	}
-		
-	for(unsigned int t=0; t<numThreads; t++)
-		runThreads[t].join();
+	for(auto &th : runThreads)
+		th.join();
 	
 	//finishDynC = std::chrono::system_clock::now();
 	//std::chrono::duration<double> elapsed_seconds_dync = finishDynC-startDynC;
