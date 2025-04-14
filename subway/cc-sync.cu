@@ -20,11 +20,12 @@ int main(int argc, char** argv)
 	timer.Start();
 	
 	Graph<OutEdge> graph(arguments.input, false);
+	cout<<arguments.input<<",";
 	graph.ReadGraph();
 	
 	float readtime = timer.Finish();
-	cout << "Graph Reading finished in " << readtime/1000 << " (s).\n";
-	
+	// cout << "Graph Reading finished in " << readtime/1000 << " (s).\n";
+	cout << readtime/1000 << ",";
 
 	for(unsigned int i=0; i<graph.num_nodes; i++)
 	{
@@ -86,15 +87,15 @@ int main(int argc, char** argv)
 	}	
 	
 	float runtime = timer.Finish();
-	cout << "Processing finished in " << runtime/1000 << " (s).\n";
+	// cout << "Processing finished in " << runtime/1000 << " (s).\n";
 	
-	cout << "Number of iterations = " << itr << endl;
-	
+	// cout << "Number of iterations = " << itr << endl;
+	cout << runtime/1000 << "\n";
 	gpuErrorcheck(cudaMemcpy(graph.value, graph.d_value, graph.num_nodes*sizeof(uint), cudaMemcpyDeviceToHost));
 	
-	utilities::PrintResults(graph.value, min(30, graph.num_nodes));
+	// utilities::PrintResults(graph.value, min(30, graph.num_nodes));
 			
-	if(arguments.hasOutput)
-		utilities::SaveResults(arguments.output, graph.value, graph.num_nodes);
+	// if(arguments.hasOutput)
+	// 	utilities::SaveResults(arguments.output, graph.value, graph.num_nodes);
 }
 

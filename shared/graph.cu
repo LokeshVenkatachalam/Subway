@@ -189,8 +189,8 @@ void Graph<E>::ReadGraph()
         
         num_nodes = vertices.size() - 1;
         num_edges = edgesVec.size();
-        cout << "Num vertices = " << num_nodes << endl;
-        cout << "Num Edges = " << num_edges << endl;
+        // cout << "Num vertices = " << num_nodes << endl;
+        // cout << "Num Edges = " << num_edges << endl;
         
         nodePointer = new edge_t[num_nodes+1];
         for(uint i = 0; i < vertices.size(); i++){
@@ -224,9 +224,10 @@ void Graph<E>::ReadGraph()
 	gpuErrorcheck(cudaMalloc(&d_label1, num_nodes * sizeof(bool)));
 	gpuErrorcheck(cudaMalloc(&d_label2, num_nodes * sizeof(bool)));
 	
-	cout << "Done reading.\n";
-	cout << "Number of nodes = " << num_nodes << endl;
-	cout << "Number of edges = " << num_edges << endl;
+	// cout << "Done reading.\n";
+	// cout << "Number of nodes = " << num_nodes << endl;
+	// cout << "Number of edges = " << num_edges << endl;
+	cout << num_nodes << "," << num_edges <<",";
 
 
 }
