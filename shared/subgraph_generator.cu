@@ -181,7 +181,7 @@ void SubgraphGenerator<E>::generate(Graph<E> &graph, Subgraph<E> &subgraph)
 	
 	for(unsigned int t = 0; t < numThreads; t++){
 		runThreads.emplace_back([=, &subgraph, &graph]() {
-			dynamic<E, unsigned int>(t, numThreads, subgraph.numActiveNodes,
+			dynamic<E, edge_t>(t, numThreads, subgraph.numActiveNodes,
 					   subgraph.activeNodes,
 					   graph.outDegree, 
 					   subgraph.activeNodesPointer,
@@ -258,7 +258,7 @@ void SubgraphGenerator<E>::generate(GraphPR<E> &graph, Subgraph<E> &subgraph, fl
 	
 	for(unsigned int t = 0; t < numThreads; t++){
 		runThreads.emplace_back([=, &subgraph, &graph]() {
-			dynamic<E, unsigned int>(t, numThreads, subgraph.numActiveNodes,
+			dynamic<E, edge_t>(t, numThreads, subgraph.numActiveNodes,
 					   subgraph.activeNodes,
 					   graph.outDegree, 
 					   subgraph.activeNodesPointer,
